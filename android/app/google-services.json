@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "301564901227",
+    "project_id": "fuwa-nail-cafe",
+    "storage_bucket": "fuwa-nail-cafe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301564901227:android:1822af8983b44bbcccfe2e",
+        "android_client_info": {
+          "package_name": "com.example.fuwa_cafe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnaNZhd2YZZKX8ZSORsz2OFnw78nk75lA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
