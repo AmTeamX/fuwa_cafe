@@ -52,4 +52,22 @@ class StorageServices {
       return [];
     }
   }
+
+  Future<bool> booking(String uid, DateTime date, DateTime time, String detail,
+      String promoID, String serviceID) async {
+    try {
+      await _firestore.collection("appointment").add({
+        'customer_id': uid,
+        'date': date,
+        'details': detail,
+        'promotion_id': promoID,
+        'service_id': serviceID,
+        'time': time,
+        'finished': "unapproved"
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

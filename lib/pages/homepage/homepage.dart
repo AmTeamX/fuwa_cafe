@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fuwa_cafe/pages/promotion/promotion.dart';
+import 'package:fuwa_cafe/pages/reserve/eyelash.dart';
 import 'package:fuwa_cafe/pages/reserve/manicure.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
@@ -198,33 +199,42 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    Container(
-                      width: screen.width * 0.3,
-                      height: screen.height * 0.17,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFFFFFFF),
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0x40000000),
-                            blurRadius: 2,
-                            offset: Offset(0, 5), // Shadow position
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset("assets/Hat_logo.png"),
-                          Text("Eyelash\nextensions",
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.chewy(
-                                  textStyle: const TextStyle(
-                                color: Color(0xFF000000),
-                                decoration: TextDecoration.none,
-                                fontSize: 18,
-                              ))),
-                        ],
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Eyelash()),
+                        );
+                      },
+                      child: Container(
+                        width: screen.width * 0.3,
+                        height: screen.height * 0.17,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFFFFFFF),
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0x40000000),
+                              blurRadius: 2,
+                              offset: Offset(0, 5), // Shadow position
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset("assets/Hat_logo.png"),
+                            Text("Eyelash\nextensions",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.chewy(
+                                    textStyle: const TextStyle(
+                                  color: Color(0xFF000000),
+                                  decoration: TextDecoration.none,
+                                  fontSize: 18,
+                                ))),
+                          ],
+                        ),
                       ),
                     ),
                   ],

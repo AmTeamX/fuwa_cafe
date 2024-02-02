@@ -1,6 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:fuwa_cafe/api/storage_services.dart';
+import 'package:fuwa_cafe/pages/homepage/homepage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -13,16 +17,20 @@ class Manicure extends StatefulWidget {
 
 class _ManicureState extends State<Manicure> {
   static const List<String> ra = <String>['1', '2', '3', '4', '5'];
+
+  User? user = FirebaseAuth.instance.currentUser;
   var strDate = "<-select date";
   var strTime = "<-select time";
   bool _loading = false;
   final TextEditingController detail = TextEditingController();
 
-  bool isNewly = false;
-  bool isFill = false;
+  bool isHand = false;
+  bool isFoot = false;
+  bool isExtent = false;
+  bool isRemove = false;
   String dropdownValue = ra.first;
   String? selectedPromotionName;
-  String? selectedPromotionId;
+  String? selectedPromotionId = "No promotion select now";
 
   DateTime? selectDate;
   DateTime? selectTime;
@@ -144,20 +152,38 @@ class _ManicureState extends State<Manicure> {
                   ],
                 ),
                 const SizedBox(
-                  height: 18,
+                  height: 8,
                 ),
                 Row(
                   children: [
                     Checkbox(
                       checkColor: Colors.white,
-                      value: isNewly,
+                      value: isHand,
                       onChanged: (bool? value) {
                         setState(() {
-                          isNewly = value!;
+                          isHand = value!;
                         });
                       },
                     ),
-                    Text("Newly created",
+                    Text("Hand",
+                        style: GoogleFonts.chewy(
+                            textStyle: const TextStyle(
+                                color: Color(0xFF000000),
+                                decoration: TextDecoration.none,
+                                fontSize: 18))),
+                    const SizedBox(
+                      width: 50,
+                    ),
+                    Checkbox(
+                      checkColor: Colors.white,
+                      value: isFoot,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isFoot = value!;
+                        });
+                      },
+                    ),
+                    Text("Foot",
                         style: GoogleFonts.chewy(
                             textStyle: const TextStyle(
                                 color: Color(0xFF000000),
@@ -169,14 +195,33 @@ class _ManicureState extends State<Manicure> {
                   children: [
                     Checkbox(
                       checkColor: Colors.white,
-                      value: isFill,
+                      value: isExtent,
                       onChanged: (bool? value) {
                         setState(() {
-                          isFill = value!;
+                          isExtent = value!;
                         });
                       },
                     ),
-                    Text("Fill in eyelash",
+                    Text("Nail extension",
+                        style: GoogleFonts.chewy(
+                            textStyle: const TextStyle(
+                                color: Color(0xFF000000),
+                                decoration: TextDecoration.none,
+                                fontSize: 18))),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Checkbox(
+                      checkColor: Colors.white,
+                      value: isRemove,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isRemove = value!;
+                        });
+                      },
+                    ),
+                    Text("Remove old nail polish",
                         style: GoogleFonts.chewy(
                             textStyle: const TextStyle(
                                 color: Color(0xFF000000),
@@ -261,7 +306,59 @@ class _ManicureState extends State<Manicure> {
                       backgroundColor: const Color(0xFFCAAF9F)),
                   onPressed: () async {
                     _loading = true;
+
                     if (selectDate != null && selectTime != null) {
+                      String allDetait =
+                          "Service: Manicure\nNumber of custumer: $dropdownValue\ndetail: ${detail.text}\nHand: $isHand\nFoot: $isFoot\nNail extension: $isExtent\nRemove old nail polish: $isRemove";
+                      bool isSuccess = await StorageServices().booking(
+                        user!.uid,
+                        selectDate!,
+                        selectTime!,
+                        allDetait,
+                        selectedPromotionId!,
+                        "2Izg14qVSxXFnLpBwnb8",
+                      );
+
+                      if (isSuccess) {
+                        await showDialog(
+                            context: context,
+                            builder: (BuildContext dialogContext) {
+                              return AlertDialog(
+                                title: const Text('Booking success'),
+                                content: const Text("Please come on time"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Ok'),
+                                    onPressed: () {
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute<void>(
+                                              builder: (BuildContext context) =>
+                                                  const HomePage()),
+                                          ModalRoute.withName('/'));
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
+                      } else {
+                        await showDialog(
+                            context: context,
+                            builder: (BuildContext dialogContext) {
+                              return AlertDialog(
+                                title: const Text('Booking Failed'),
+                                content: const Text("Please try again"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Ok'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
+                      }
+                      _loading = false;
                     } else {
                       _loading = false;
                       BuildContext dialogContext = context;

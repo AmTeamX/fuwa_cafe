@@ -1,6 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:fuwa_cafe/api/storage_services.dart';
+import 'package:fuwa_cafe/pages/homepage/homepage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +20,7 @@ class _EyelashState extends State<Eyelash> {
   var strDate = "<-select date";
   var strTime = "<-select time";
   bool _loading = false;
+  User? user = FirebaseAuth.instance.currentUser;
   final TextEditingController detail = TextEditingController();
 
   bool isNewly = false;
@@ -261,7 +266,59 @@ class _EyelashState extends State<Eyelash> {
                       backgroundColor: const Color(0xFFCAAF9F)),
                   onPressed: () async {
                     _loading = true;
+
                     if (selectDate != null && selectTime != null) {
+                      String allDetait =
+                          "Service: Manicure\nNumber of custumer: $dropdownValue\ndetail: ${detail.text}\nNewlyCreate: $isNewly\nFill in eyelash: $isFill";
+                      bool isSuccess = await StorageServices().booking(
+                        user!.uid,
+                        selectDate!,
+                        selectTime!,
+                        allDetait,
+                        selectedPromotionId!,
+                        "2Izg14qVSxXFnLpBwnb8",
+                      );
+
+                      if (isSuccess) {
+                        await showDialog(
+                            context: context,
+                            builder: (BuildContext dialogContext) {
+                              return AlertDialog(
+                                title: const Text('Booking success'),
+                                content: const Text("Please come on time"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Ok'),
+                                    onPressed: () {
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute<void>(
+                                              builder: (BuildContext context) =>
+                                                  const HomePage()),
+                                          ModalRoute.withName('/'));
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
+                      } else {
+                        await showDialog(
+                            context: context,
+                            builder: (BuildContext dialogContext) {
+                              return AlertDialog(
+                                title: const Text('Booking Failed'),
+                                content: const Text("Please try again"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Ok'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
+                      }
+                      _loading = false;
                     } else {
                       _loading = false;
                       BuildContext dialogContext = context;
