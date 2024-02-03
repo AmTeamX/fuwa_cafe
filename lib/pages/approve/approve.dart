@@ -5,14 +5,14 @@ import 'package:fuwa_cafe/api/storage_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class Todo extends StatefulWidget {
-  const Todo({super.key});
+class ApprovePage extends StatefulWidget {
+  const ApprovePage({super.key});
 
   @override
-  State<Todo> createState() => _TodoState();
+  State<ApprovePage> createState() => _ApprovePageState();
 }
 
-class _TodoState extends State<Todo> {
+class _ApprovePageState extends State<ApprovePage> {
   User? user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class _TodoState extends State<Todo> {
     return Scaffold(
       backgroundColor: const Color(0xFFFBF6F0),
       appBar: AppBar(
-        title: Text("Todo",
+        title: Text("Notifications",
             style: GoogleFonts.chewy(
                 textStyle: const TextStyle(
                     color: Color(0xFF000000),
@@ -32,8 +32,7 @@ class _TodoState extends State<Todo> {
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("appointment")
-              .where('customer_id', isEqualTo: user!.uid)
-              .where('finished', isEqualTo: 'approved')
+              .where('finished', isEqualTo: 'unapproved')
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -146,16 +145,30 @@ class _TodoState extends State<Todo> {
                                       fontSize: 16))),
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFD9D9D9)),
+                              onPressed: () async {
+                                StorageServices()
+                                    .setStatus(document.id, 'canceled');
+                              },
+                              child: Text('cancel',
+                                  style: GoogleFonts.chewy(
+                                      textStyle: const TextStyle(
+                                          color: Color(0xFF000000),
+                                          decoration: TextDecoration.none,
+                                          fontSize: 22))),
+                            ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFFFBF6F0)),
                               onPressed: () async {
                                 StorageServices()
-                                    .setStatus(document.id, 'finished');
+                                    .setStatus(document.id, 'approved');
                               },
-                              child: Text('Finish',
+                              child: Text('Approved',
                                   style: GoogleFonts.chewy(
                                       textStyle: const TextStyle(
                                           color: Color(0xFF000000),

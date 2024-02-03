@@ -1,9 +1,35 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StorageServices {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  Future<bool> uploadImageAndUpdateProfile(File imageFile) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      String uid = _firebaseAuth.currentUser!.uid;
+      String imageName =
+          'user_images/$uid/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      UploadTask uploadTask =
+          _storage.ref().child(imageName).putFile(imageFile);
+      TaskSnapshot storageSnapshot = await uploadTask;
+      String downloadUrl = await storageSnapshot.ref.getDownloadURL();
+
+      user!.updatePhotoURL(downloadUrl);
+      await _firestore.collection('customer').doc(uid).update({
+        'profile_image': downloadUrl,
+      });
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
   Future<Map<String, dynamic>?> getUserData() async {
     _firestore
@@ -20,6 +46,21 @@ class StorageServices {
       DateTime startDate, DateTime endDate, String name, String detail) async {
     try {
       await _firestore.collection("promotion").add({
+        'start_date': startDate,
+        'end_date': endDate,
+        'name': name,
+        'detail': detail
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> editPromotion(String promoId, DateTime startDate,
+      DateTime endDate, String name, String detail) async {
+    try {
+      await _firestore.collection("promotion").doc(promoId).update({
         'start_date': startDate,
         'end_date': endDate,
         'name': name,
@@ -88,12 +129,12 @@ class StorageServices {
     }
   }
 
-  Future<bool> finish(String docid) async {
+  Future<bool> setStatus(String docid, String status) async {
     try {
       await _firestore
           .collection("appointment")
           .doc(docid)
-          .update({'finished': 'finish'});
+          .update({'finished': status});
       return true;
     } catch (e) {
       return false;

@@ -1,11 +1,16 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fuwa_cafe/api/auth_service.dart';
+import 'package:fuwa_cafe/api/storage_services.dart';
 import 'package:fuwa_cafe/pages/first_page.dart';
+import 'package:fuwa_cafe/pages/homepage/homepage.dart';
 import 'package:fuwa_cafe/pages/profile/profile.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -16,8 +21,26 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   User? user = FirebaseAuth.instance.currentUser;
-
+  File? _imageFile;
   late Future<bool> _isAdminFuture;
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      // If an image is picked, set the state with the picked image file
+      setState(() {
+        _imageFile = File(pickedImage.path);
+      });
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Fetch the current user whenever the dependencies change
+    user = FirebaseAuth.instance.currentUser;
+  }
 
   @override
   void initState() {
@@ -56,7 +79,11 @@ class _ProfileState extends State<Profile> {
                   children: [
                     IconButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomePage()),
+                          );
                         },
                         icon: const Icon(Icons.keyboard_arrow_left)),
                     Text(
@@ -74,14 +101,37 @@ class _ProfileState extends State<Profile> {
               SizedBox(
                 height: screen.height * 0.05,
               ),
-              CircleAvatar(
-                radius: 60, // Adjust the radius as needed
-                backgroundImage: user!.photoURL!.isEmpty
-                    ? const AssetImage(
-                        'assets/profile_pic.png') // Placeholder image if URL is empty
-                    : NetworkImage(user!.photoURL!)
-                        as ImageProvider, // User's profile picture URL
-                // User's profile picture URL
+              GestureDetector(
+                onTap: () async {
+                  await _pickImage();
+                  if (_imageFile != null) {
+                    showDialog(
+                      context: context,
+                      barrierDismissible:
+                          false, // Prevent user from dismissing the dialog
+                      builder: (BuildContext context) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                    );
+                    await StorageServices()
+                        .uploadImageAndUpdateProfile(_imageFile!);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Profile()),
+                    );
+                  }
+                },
+                child: CircleAvatar(
+                  radius: 60, // Adjust the radius as needed
+                  backgroundImage: user!.photoURL!.isEmpty
+                      ? const AssetImage(
+                          'assets/profile_pic.png') // Placeholder image if URL is empty
+                      : NetworkImage(user!.photoURL!)
+                          as ImageProvider, // User's profile picture URL
+                  // User's profile picture URL
+                ),
               ),
               SizedBox(
                 height: screen.height * 0.025,
@@ -152,7 +202,7 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const EditProfile()),
@@ -203,7 +253,7 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const History()),
@@ -273,7 +323,7 @@ class _ProfileState extends State<Profile> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  Navigator.push(
+                                  Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => const Todo()),

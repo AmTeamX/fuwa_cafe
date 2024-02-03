@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class History extends StatefulWidget {
   const History({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class _HistoryState extends State<History> {
           stream: FirebaseFirestore.instance
               .collection("appointment")
               .where('customer_id', isEqualTo: user!.uid)
-              .where('finished', isEqualTo: 'finish')
+              .where('finished', isEqualTo: 'finished')
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -43,6 +44,12 @@ class _HistoryState extends State<History> {
                   snapshot.data!.docs.map((DocumentSnapshot document) {
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
+                var timeFormat = DateFormat('HH:mm a');
+                var dateFormat = DateFormat('dd/MM/yyyy');
+                DateTime srcDate = data['date'].toDate();
+                DateTime srcTime = data['time'].toDate();
+                final date = dateFormat.format(srcDate);
+                final time = timeFormat.format(srcTime);
                 return Center(
                   child: Container(
                     padding: const EdgeInsets.all(12),
@@ -63,7 +70,7 @@ class _HistoryState extends State<History> {
                                             textStyle: const TextStyle(
                                                 color: Color(0xFF000000),
                                                 decoration: TextDecoration.none,
-                                                fontSize: 20)))
+                                                fontSize: 28)))
                                     : Text("Eyelash extensions",
                                         style: GoogleFonts.chewy(
                                             textStyle: const TextStyle(
@@ -74,10 +81,63 @@ class _HistoryState extends State<History> {
                             )
                           ],
                         ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.calendar_month),
+                              Text(":  $date",
+                                  style: GoogleFonts.chewy(
+                                      textStyle: const TextStyle(
+                                          color: Color(0xFF000000),
+                                          decoration: TextDecoration.none,
+                                          fontSize: 20))),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.timer),
+                              Text(":  $time",
+                                  style: GoogleFonts.chewy(
+                                      textStyle: const TextStyle(
+                                          color: Color(0xFF000000),
+                                          decoration: TextDecoration.none,
+                                          fontSize: 20))),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.people),
+                              Text(":  ${data['costomer_count']}",
+                                  style: GoogleFonts.chewy(
+                                      textStyle: const TextStyle(
+                                          color: Color(0xFF000000),
+                                          decoration: TextDecoration.none,
+                                          fontSize: 20))),
+                            ],
+                          ),
+                        ),
                         SizedBox(
                           width: screen.width * 0.7,
-                          height: screen.height * 0.15,
                           child: Text("detail : \n${data['details']}",
+                              style: GoogleFonts.chewy(
+                                  textStyle: const TextStyle(
+                                      color: Color(0xFF000000),
+                                      decoration: TextDecoration.none,
+                                      fontSize: 16))),
+                        ),
+                        SizedBox(
+                          width: screen.width * 0.7,
+                          child: Text("Add-on: \n${data['addon']}",
                               style: GoogleFonts.chewy(
                                   textStyle: const TextStyle(
                                       color: Color(0xFF000000),

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fuwa_cafe/pages/approve/approve.dart';
 import 'package:fuwa_cafe/pages/profile/profile.dart';
 import 'package:fuwa_cafe/pages/promotion/promotion.dart';
 import 'package:fuwa_cafe/pages/reserve/eyelash.dart';
@@ -19,6 +20,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   User? user = FirebaseAuth.instance.currentUser;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    user = FirebaseAuth.instance.currentUser;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
@@ -66,20 +73,35 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     decoration:
                         const BoxDecoration(borderRadius: BorderRadius.zero),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Profile()),
-                        );
-                      },
-                      child: CircleAvatar(
-                        radius: 30, // Adjust the radius as needed
-                        backgroundImage: user!.photoURL!.isEmpty
-                            ? const AssetImage('assets/profile_pic.png')
-                            : NetworkImage(user!.photoURL!) as ImageProvider,
-                      ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const ApprovePage()),
+                              );
+                            },
+                            icon: const Icon(
+                                Icons.notification_important_outlined)),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Profile()),
+                            );
+                          },
+                          child: CircleAvatar(
+                            radius: 30, // Adjust the radius as needed
+                            backgroundImage: user!.photoURL!.isEmpty
+                                ? const AssetImage('assets/profile_pic.png')
+                                : NetworkImage(user!.photoURL!)
+                                    as ImageProvider,
+                          ),
+                        ),
+                      ],
                     ),
                   )
                 ],
@@ -113,8 +135,7 @@ class _HomePageState extends State<HomePage> {
                         stream: FirebaseFirestore.instance
                             .collection("appointment")
                             .where('customer_id', isEqualTo: user!.uid)
-                            .where('finished', isNotEqualTo: "finish")
-                            .orderBy('finished')
+                            .where('finished', isEqualTo: "approved")
                             .orderBy('date', descending: false)
                             .orderBy('time', descending: false)
                             .snapshots(),
@@ -197,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const PromotionPage()),
@@ -269,7 +290,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const Manicure()),
@@ -305,7 +326,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const Eyelash()),

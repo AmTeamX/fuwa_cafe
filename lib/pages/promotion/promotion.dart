@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fuwa_cafe/pages/addpromotion/add_promotion.dart';
+import 'package:fuwa_cafe/pages/editpromotion/editpromotion.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../api/auth_service.dart';
 
@@ -98,12 +99,17 @@ class _PromotionPageState extends State<PromotionPage> {
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                             backgroundColor:
-                                                const Color(0xFFCAAF9F)),
-                                        onPressed: () async {},
+                                                const Color(0xFFD9D9D9)),
+                                        onPressed: () async {
+                                          await FirebaseFirestore.instance
+                                              .collection('promotion')
+                                              .doc(document.id)
+                                              .delete();
+                                        },
                                         child: Text('Delete',
                                             style: GoogleFonts.chewy(
                                                 textStyle: const TextStyle(
-                                                    color: Color(0xFF6C5F57),
+                                                    color: Color(0xFF000000),
                                                     decoration:
                                                         TextDecoration.none,
                                                     fontSize: 22))),
@@ -111,12 +117,20 @@ class _PromotionPageState extends State<PromotionPage> {
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                             backgroundColor:
-                                                const Color(0xFFCAAF9F)),
-                                        onPressed: () async {},
+                                                const Color(0xFFFBF6F0)),
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditPromotion(
+                                                        promoId: document.id)),
+                                          );
+                                        },
                                         child: Text('Edit',
                                             style: GoogleFonts.chewy(
                                                 textStyle: const TextStyle(
-                                                    color: Color(0xFF6C5F57),
+                                                    color: Color(0xFF000000),
                                                     decoration:
                                                         TextDecoration.none,
                                                     fontSize: 22))),
@@ -152,7 +166,7 @@ class _PromotionPageState extends State<PromotionPage> {
             } else {
               return FloatingActionButton(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const AddPromotion()),
