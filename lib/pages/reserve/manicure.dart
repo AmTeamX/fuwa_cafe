@@ -30,7 +30,7 @@ class _ManicureState extends State<Manicure> {
   bool isRemove = false;
   String dropdownValue = ra.first;
   String? selectedPromotionName;
-  String? selectedPromotionId = "No promotion select now";
+  String? selectedPromotionId;
 
   DateTime? selectDate;
   DateTime? selectTime;
