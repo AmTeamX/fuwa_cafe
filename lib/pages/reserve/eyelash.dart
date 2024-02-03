@@ -269,15 +269,18 @@ class _EyelashState extends State<Eyelash> {
 
                     if (selectDate != null && selectTime != null) {
                       String allDetait =
-                          "Service: Manicure\nNumber of custumer: $dropdownValue\ndetail: ${detail.text}\nNewlyCreate: $isNewly\nFill in eyelash: $isFill";
+                          "NewlyCreate: $isNewly | Fill in eyelash: $isFill ";
                       bool isSuccess = await StorageServices().booking(
-                        user!.uid,
-                        selectDate!,
-                        selectTime!,
-                        allDetait,
-                        selectedPromotionId!,
-                        "PE6327CrRVXO08wkXALs",
-                      );
+                          user!.uid,
+                          selectDate!,
+                          selectTime!,
+                          allDetait,
+                          selectedPromotionId == null
+                              ? "not have promotion"
+                              : selectedPromotionId!,
+                          "PE6327CrRVXO08wkXALs",
+                          dropdownValue,
+                          detail.text);
 
                       if (isSuccess) {
                         await showDialog(

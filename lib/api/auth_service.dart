@@ -18,6 +18,8 @@ class AuthService {
       );
 
       await credential.user!.updateDisplayName(username);
+      await credential.user!.updatePhotoURL(
+          "https://firebasestorage.googleapis.com/v0/b/fuwa-nail-cafe.appspot.com/o/defpic.jpg?alt=media&token=d1113876-d107-4876-aad3-56159335d6d3");
 
       final userId = credential.user!.uid;
 

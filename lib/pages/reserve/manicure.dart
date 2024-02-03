@@ -309,15 +309,16 @@ class _ManicureState extends State<Manicure> {
 
                     if (selectDate != null && selectTime != null) {
                       String allDetait =
-                          "Service: Manicure\nNumber of custumer: $dropdownValue\ndetail: ${detail.text}\nHand: $isHand\nFoot: $isFoot\nNail extension: $isExtent\nRemove old nail polish: $isRemove";
+                          "Hand: $isHand | Foot: $isFoot | Nail extension: $isExtent | Remove old nail polish: $isRemove";
                       bool isSuccess = await StorageServices().booking(
-                        user!.uid,
-                        selectDate!,
-                        selectTime!,
-                        allDetait,
-                        selectedPromotionId!,
-                        "2Izg14qVSxXFnLpBwnb8",
-                      );
+                          user!.uid,
+                          selectDate!,
+                          selectTime!,
+                          allDetait,
+                          selectedPromotionId!,
+                          "2Izg14qVSxXFnLpBwnb8",
+                          dropdownValue,
+                          detail.text);
 
                       if (isSuccess) {
                         await showDialog(

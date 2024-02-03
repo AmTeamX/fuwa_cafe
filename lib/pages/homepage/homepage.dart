@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fuwa_cafe/pages/profile/profile.dart';
 import 'package:fuwa_cafe/pages/promotion/promotion.dart';
 import 'package:fuwa_cafe/pages/reserve/eyelash.dart';
 import 'package:fuwa_cafe/pages/reserve/manicure.dart';
@@ -65,7 +66,21 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     decoration:
                         const BoxDecoration(borderRadius: BorderRadius.zero),
-                    child: Image.asset("assets/profile_pic.png"),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Profile()),
+                        );
+                      },
+                      child: CircleAvatar(
+                        radius: 30, // Adjust the radius as needed
+                        backgroundImage: user!.photoURL!.isEmpty
+                            ? const AssetImage('assets/profile_pic.png')
+                            : NetworkImage(user!.photoURL!) as ImageProvider,
+                      ),
+                    ),
                   )
                 ],
               ),

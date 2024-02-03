@@ -54,7 +54,7 @@ class StorageServices {
   }
 
   Future<bool> booking(String uid, DateTime date, DateTime time, String detail,
-      String promoID, String serviceID) async {
+      String promoID, String serviceID, String ct, String addon) async {
     try {
       await _firestore.collection("appointment").add({
         'customer_id': uid,
@@ -63,8 +63,37 @@ class StorageServices {
         'promotion_id': promoID,
         'service_id': serviceID,
         'time': time,
-        'finished': "unapproved"
+        'finished': "unapproved",
+        'costomer_count': ct,
+        'addon': addon
       });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> updateData(String nName, String nPhone, String nEmail) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      await _firestore
+          .collection("customer")
+          .doc(user!.uid)
+          .update({'name': nName, 'phone_number': nPhone, 'email': nEmail});
+      user.updateDisplayName(nName);
+      user.updateEmail(nEmail);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> finish(String docid) async {
+    try {
+      await _firestore
+          .collection("appointment")
+          .doc(docid)
+          .update({'finished': 'finish'});
       return true;
     } catch (e) {
       return false;
