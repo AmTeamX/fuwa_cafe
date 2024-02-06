@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         IconButton(
                             onPressed: () {
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const ApprovePage()),
@@ -218,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const PromotionPage()),
