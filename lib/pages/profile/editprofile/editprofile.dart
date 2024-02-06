@@ -97,7 +97,7 @@ class _EditProfileState extends State<EditProfile> {
                           } else {
                             return IconButton(
                                 onPressed: () {
-                                  Navigator.pushReplacement(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>

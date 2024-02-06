@@ -79,7 +79,7 @@ class _ProfileState extends State<Profile> {
                   children: [
                     IconButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const HomePage()),
@@ -117,7 +117,7 @@ class _ProfileState extends State<Profile> {
                     );
                     await StorageServices()
                         .uploadImageAndUpdateProfile(_imageFile!);
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const Profile()),
                     );
@@ -202,7 +202,7 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const EditProfile()),
@@ -253,7 +253,7 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const History()),
@@ -323,7 +323,7 @@ class _ProfileState extends State<Profile> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  Navigator.pushReplacement(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => const Todo()),

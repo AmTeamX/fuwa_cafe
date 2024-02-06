@@ -119,7 +119,7 @@ class _PromotionPageState extends State<PromotionPage> {
                                             backgroundColor:
                                                 const Color(0xFFFBF6F0)),
                                         onPressed: () {
-                                          Navigator.pushReplacement(
+                                          Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
@@ -166,7 +166,7 @@ class _PromotionPageState extends State<PromotionPage> {
             } else {
               return FloatingActionButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const AddPromotion()),
