@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fuwa_cafe/api/auth_service.dart';
 import 'package:fuwa_cafe/pages/approve/approve.dart';
 import 'package:fuwa_cafe/pages/profile/profile.dart';
 import 'package:fuwa_cafe/pages/promotion/promotion.dart';
@@ -20,6 +21,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   User? user = FirebaseAuth.instance.currentUser;
+  late Future<bool> _isAdminFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _isAdminFuture = AuthService().checkIsAdmin();
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -75,16 +84,41 @@ class _HomePageState extends State<HomePage> {
                         const BoxDecoration(borderRadius: BorderRadius.zero),
                     child: Row(
                       children: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const ApprovePage()),
-                              );
-                            },
-                            icon: const Icon(
-                                Icons.notification_important_outlined)),
+                        FutureBuilder<bool>(
+                          future: _isAdminFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container();
+                            } else {
+                              if (snapshot.hasError || snapshot.data == false) {
+                                return Container();
+                              } else {
+                                return Container(
+                                  padding: const EdgeInsets.only(
+                                      left: 12, right: 12),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      IconButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const ApprovePage()),
+                                            );
+                                          },
+                                          icon: const Icon(Icons
+                                              .notification_important_outlined)),
+                                    ],
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                        ),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
