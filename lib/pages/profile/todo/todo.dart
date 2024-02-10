@@ -32,7 +32,6 @@ class _TodoState extends State<Todo> {
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("appointment")
-              .where('customer_id', isEqualTo: user!.uid)
               .where('finished', isEqualTo: 'approved')
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {

@@ -315,7 +315,9 @@ class _ManicureState extends State<Manicure> {
                           selectDate!,
                           selectTime!,
                           allDetait,
-                          selectedPromotionId!,
+                          selectedPromotionId == null
+                              ? "not have promotion"
+                              : selectedPromotionId!,
                           "2Izg14qVSxXFnLpBwnb8",
                           dropdownValue,
                           detail.text);
