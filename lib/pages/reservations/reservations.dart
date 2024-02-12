@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:expansion_tile_card/expansion_tile_card.dart';
 
-class History extends StatefulWidget {
-  const History({Key? key}) : super(key: key);
+class ReservationsPage extends StatefulWidget {
+  const ReservationsPage({super.key});
 
   @override
-  State<History> createState() => _HistoryState();
+  State<ReservationsPage> createState() => _ReservationsPageState();
 }
 
-class _HistoryState extends State<History> {
+class _ReservationsPageState extends State<ReservationsPage> {
   User? user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class _HistoryState extends State<History> {
     return Scaffold(
       backgroundColor: const Color(0xFFFBF6F0),
       appBar: AppBar(
-        title: Text("History",
+        title: Text("Reservations",
             style: GoogleFonts.chewy(
                 textStyle: const TextStyle(
                     color: Color(0xFF000000),
@@ -33,7 +33,7 @@ class _HistoryState extends State<History> {
           stream: FirebaseFirestore.instance
               .collection("appointment")
               .where('customer_id', isEqualTo: user!.uid)
-              .where('finished', isEqualTo: 'finished')
+              .where('finished', isEqualTo: 'approved')
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

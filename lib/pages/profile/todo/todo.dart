@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fuwa_cafe/api/storage_services.dart';
@@ -126,23 +127,36 @@ class _TodoState extends State<Todo> {
                             ],
                           ),
                         ),
-                        SizedBox(
-                          width: screen.width * 0.7,
-                          child: Text("detail : \n${data['details']}",
+                        ExpansionTileCard(
+                          baseColor: const Color(0xFFD8BFAE),
+                          expandedColor: const Color(0xFFD8BFAE),
+                          title: Text("Details",
                               style: GoogleFonts.chewy(
                                   textStyle: const TextStyle(
                                       color: Color(0xFF000000),
                                       decoration: TextDecoration.none,
                                       fontSize: 16))),
-                        ),
-                        SizedBox(
-                          width: screen.width * 0.7,
-                          child: Text("Add-on: \n${data['addon']}",
-                              style: GoogleFonts.chewy(
-                                  textStyle: const TextStyle(
-                                      color: Color(0xFF000000),
-                                      decoration: TextDecoration.none,
-                                      fontSize: 16))),
+                          shadowColor: Colors.transparent,
+                          children: <Widget>[
+                            SizedBox(
+                              width: screen.width * 0.7,
+                              child: Text("${data['details']}",
+                                  style: GoogleFonts.chewy(
+                                      textStyle: const TextStyle(
+                                          color: Color(0xFF000000),
+                                          decoration: TextDecoration.none,
+                                          fontSize: 16))),
+                            ),
+                            SizedBox(
+                              width: screen.width * 0.7,
+                              child: Text("Add-on: \n${data['addon']}",
+                                  style: GoogleFonts.chewy(
+                                      textStyle: const TextStyle(
+                                          color: Color(0xFF000000),
+                                          decoration: TextDecoration.none,
+                                          fontSize: 16))),
+                            ),
+                          ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,

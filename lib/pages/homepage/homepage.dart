@@ -5,6 +5,7 @@ import 'package:fuwa_cafe/api/auth_service.dart';
 import 'package:fuwa_cafe/pages/approve/approve.dart';
 import 'package:fuwa_cafe/pages/profile/profile.dart';
 import 'package:fuwa_cafe/pages/promotion/promotion.dart';
+import 'package:fuwa_cafe/pages/reservations/reservations.dart';
 import 'package:fuwa_cafe/pages/reserve/eyelash.dart';
 import 'package:fuwa_cafe/pages/reserve/manicure.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -156,99 +157,133 @@ class _HomePageState extends State<HomePage> {
                                   fontSize: 28))),
                     ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(
-                        top: 12, bottom: 12, left: 22, right: 22),
-                    margin: const EdgeInsets.only(top: 20),
-                    width: screen.width * 0.8,
-                    height: screen.height * 0.15,
-                    decoration: const BoxDecoration(
-                        color: Color(0xFFE0CCBE),
-                        borderRadius: BorderRadius.all(Radius.circular(25))),
-                    child: StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection("appointment")
-                            .where('customer_id', isEqualTo: user!.uid)
-                            .where('finished', isEqualTo: "approved")
-                            .orderBy('date', descending: false)
-                            .orderBy('time', descending: false)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          }
-                          if (snapshot.hasData) {
-                            List<QueryDocumentSnapshot<Map<String, dynamic>>>
-                                data = snapshot.data!.docs;
-                            if (data.isNotEmpty) {
-                              var timeFormat = DateFormat('HH:mm a');
-                              var dateFormat = DateFormat('dd/MM/yyyy');
-                              DateTime srcDate = data[0]['date'].toDate();
-                              DateTime srcTime = data[0]['time'].toDate();
-                              final date = dateFormat.format(srcDate);
-                              final time = timeFormat.format(srcTime);
-                              return Column(
-                                children: [
-                                  Expanded(
-                                      child: Row(
-                                    children: [
-                                      data[0]['service_id'] ==
-                                              '2Izg14qVSxXFnLpBwnb8'
-                                          ? Text("Manicure",
-                                              style: GoogleFonts.chewy(
-                                                  textStyle: const TextStyle(
-                                                      color: Color(0xFF000000),
-                                                      decoration:
-                                                          TextDecoration.none,
-                                                      fontSize: 20)))
-                                          : Text("Eyelash extensions",
-                                              style: GoogleFonts.chewy(
-                                                  textStyle: const TextStyle(
-                                                      color: Color(0xFF000000),
-                                                      decoration:
-                                                          TextDecoration.none,
-                                                      fontSize: 20)))
-                                    ],
-                                  )),
-                                  Expanded(
-                                      child: Row(
-                                    children: [
-                                      const Icon(Icons.calendar_month),
-                                      Text(date,
-                                          style: GoogleFonts.chewy(
-                                              textStyle: const TextStyle(
-                                                  color: Color(0xFF000000),
-                                                  decoration:
-                                                      TextDecoration.none,
-                                                  fontSize: 18))),
-                                    ],
-                                  )),
-                                  Expanded(
-                                      child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      const Icon(Icons.timer),
-                                      Text(time,
-                                          style: GoogleFonts.chewy(
-                                              textStyle: const TextStyle(
-                                                  color: Color(0xFF000000),
-                                                  decoration:
-                                                      TextDecoration.none,
-                                                  fontSize: 18))),
-                                    ],
-                                  )),
-                                ],
-                              );
-                            } else {
-                              return const Center(
-                                child: Text("No booking now"),
-                              );
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ReservationsPage()),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                          top: 12, bottom: 12, left: 22, right: 22),
+                      margin: const EdgeInsets.only(top: 20),
+                      width: screen.width * 0.8,
+                      height: screen.height * 0.15,
+                      decoration: const BoxDecoration(
+                          color: Color(0xFFE0CCBE),
+                          borderRadius: BorderRadius.all(Radius.circular(25))),
+                      child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection("appointment")
+                              .where('customer_id', isEqualTo: user!.uid)
+                              .where('finished', isEqualTo: "approved")
+                              .orderBy('date', descending: false)
+                              .orderBy('time', descending: false)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
                             }
-                          } else {
-                            return const Text("error");
-                          }
-                        }),
+                            if (snapshot.hasData) {
+                              List<QueryDocumentSnapshot<Map<String, dynamic>>>
+                                  data = snapshot.data!.docs;
+                              if (data.isNotEmpty) {
+                                var timeFormat = DateFormat('HH:mm a');
+                                var dateFormat = DateFormat('dd/MM/yyyy');
+                                DateTime srcDate = data[0]['date'].toDate();
+                                DateTime srcTime = data[0]['time'].toDate();
+                                final date = dateFormat.format(srcDate);
+                                final time = timeFormat.format(srcTime);
+                                return Column(
+                                  children: [
+                                    Expanded(
+                                        child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        data[0]['service_id'] ==
+                                                '2Izg14qVSxXFnLpBwnb8'
+                                            ? Text("Manicure",
+                                                style: GoogleFonts.chewy(
+                                                    textStyle: const TextStyle(
+                                                        color:
+                                                            Color(0xFF000000),
+                                                        decoration:
+                                                            TextDecoration.none,
+                                                        fontSize: 20)))
+                                            : Text("Eyelash extensions",
+                                                style: GoogleFonts.chewy(
+                                                    textStyle: const TextStyle(
+                                                        color:
+                                                            Color(0xFF000000),
+                                                        decoration:
+                                                            TextDecoration.none,
+                                                        fontSize: 20))),
+                                        const Icon(
+                                          Icons.arrow_right,
+                                          size: 36,
+                                        )
+                                      ],
+                                    )),
+                                    Expanded(
+                                        child: Row(
+                                      children: [
+                                        const Icon(Icons.calendar_month),
+                                        Text(date,
+                                            style: GoogleFonts.chewy(
+                                                textStyle: const TextStyle(
+                                                    color: Color(0xFF000000),
+                                                    decoration:
+                                                        TextDecoration.none,
+                                                    fontSize: 18))),
+                                      ],
+                                    )),
+                                    Expanded(
+                                        child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        const Icon(Icons.timer),
+                                        Text(time,
+                                            style: GoogleFonts.chewy(
+                                                textStyle: const TextStyle(
+                                                    color: Color(0xFF000000),
+                                                    decoration:
+                                                        TextDecoration.none,
+                                                    fontSize: 18))),
+                                      ],
+                                    )),
+                                  ],
+                                );
+                              } else {
+                                return Column(
+                                  children: [
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('There are no reservations yet',
+                                              style: GoogleFonts.chewy(
+                                                  textStyle: const TextStyle(
+                                                      color: Color(0xFF6C5F57),
+                                                      decoration:
+                                                          TextDecoration.none,
+                                                      fontSize: 14))),
+                                          const Icon(
+                                            Icons.arrow_right,
+                                            size: 36,
+                                          )
+                                        ]),
+                                  ],
+                                );
+                              }
+                            } else {
+                              return const Text("error");
+                            }
+                          }),
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {

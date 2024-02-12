@@ -250,8 +250,7 @@ class _EyelashState extends State<Eyelash> {
                     maxLength: 300,
                     maxLines: 5,
                     decoration: const InputDecoration(
-                      border: InputBorder.none,
-                    ),
+                        border: InputBorder.none, hintText: "More details"),
                     controller: detail,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
