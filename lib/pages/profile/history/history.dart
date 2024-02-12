@@ -71,7 +71,7 @@ class _HistoryState extends State<History> {
                                             textStyle: const TextStyle(
                                                 color: Color(0xFF000000),
                                                 decoration: TextDecoration.none,
-                                                fontSize: 28)))
+                                                fontSize: 20)))
                                     : Text("Eyelash extensions",
                                         style: GoogleFonts.chewy(
                                             textStyle: const TextStyle(
