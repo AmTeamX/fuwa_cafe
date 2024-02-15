@@ -8,6 +8,7 @@ import 'package:fuwa_cafe/api/auth_service.dart';
 import 'package:fuwa_cafe/api/storage_services.dart';
 import 'package:fuwa_cafe/pages/first_page.dart';
 import 'package:fuwa_cafe/pages/homepage/homepage.dart';
+import 'package:fuwa_cafe/pages/profile/history/adminhistory.dart';
 import 'package:fuwa_cafe/pages/profile/profile.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -252,6 +253,78 @@ class _ProfileState extends State<Profile> {
                   ),
                   const SizedBox(
                     height: 8,
+                  ),
+                  FutureBuilder<bool>(
+                    future: _isAdminFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container();
+                      } else {
+                        if (snapshot.hasError || snapshot.data == false) {
+                          return Container();
+                        } else {
+                          return Column(
+                            children: [
+                              ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty
+                                      .all<Color>(const Color(
+                                          0xFFFBF6F0)), // Set transparent background
+                                  shadowColor: MaterialStateProperty.all<Color>(
+                                      Colors
+                                          .transparent), // Set transparent shadow color
+                                  padding: MaterialStateProperty
+                                      .all<EdgeInsetsGeometry>(EdgeInsets
+                                          .zero), // Remove default padding
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          12), // Set the border radius
+                                    ),
+                                  ),
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, top: 12, bottom: 12),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "AllHistory",
+                                        style: GoogleFonts.chewy(
+                                            textStyle: const TextStyle(
+                                                fontSize: 22,
+                                                color: Color(0xFF6C5F57),
+                                                decoration:
+                                                    TextDecoration.none)),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Color(0xFF6C5F57),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const AdminHistory()),
+                                  );
+                                },
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                            ],
+                          );
+                        }
+                      }
+                    },
                   ),
                   FutureBuilder<bool>(
                     future: _isAdminFuture,
