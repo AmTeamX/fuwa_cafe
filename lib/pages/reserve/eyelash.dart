@@ -131,7 +131,7 @@ class _EyelashState extends State<Eyelash> {
                                   showTitleActions: true, onConfirm: (time) {
                                 setState(() {
                                   selectTime = time;
-                                  strTime = DateFormat('HH:MM').format(time);
+                                  strTime = DateFormat('HH:mm').format(time);
                                 });
                               },
                                   currentTime: DateTime.now(),

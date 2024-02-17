@@ -30,10 +30,8 @@ class _AdminHistoryState extends State<AdminHistory> {
       ),
       body: SingleChildScrollView(
         child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection("appointment")
-              .where('finished', isEqualTo: 'finished')
-              .snapshots(),
+          stream:
+              FirebaseFirestore.instance.collection("appointment").snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
@@ -76,9 +74,14 @@ class _AdminHistoryState extends State<AdminHistory> {
                                             textStyle: const TextStyle(
                                                 color: Color(0xFF000000),
                                                 decoration: TextDecoration.none,
-                                                fontSize: 20)))
+                                                fontSize: 20))),
                               ],
                             )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text("Status : ${data['finished']}"),
                           ],
                         ),
                         Container(
