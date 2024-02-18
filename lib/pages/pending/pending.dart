@@ -6,14 +6,14 @@ import 'package:fuwa_cafe/api/storage_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class ReservationsPage extends StatefulWidget {
-  const ReservationsPage({super.key});
+class PendingPage extends StatefulWidget {
+  const PendingPage({super.key});
 
   @override
-  State<ReservationsPage> createState() => _ReservationsPageState();
+  State<PendingPage> createState() => _PendingPageState();
 }
 
-class _ReservationsPageState extends State<ReservationsPage> {
+class _PendingPageState extends State<PendingPage> {
   User? user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFFBF6F0),
       appBar: AppBar(
-        title: Text("Reservations",
+        title: Text("Pending",
             style: GoogleFonts.chewy(
                 textStyle: const TextStyle(
                     color: Color(0xFF000000),
@@ -34,7 +34,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
           stream: FirebaseFirestore.instance
               .collection("appointment")
               .where('customer_id', isEqualTo: user!.uid)
-              .where('finished', isEqualTo: 'approved')
+              .where('finished', isEqualTo: 'unapproved')
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -167,7 +167,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                   backgroundColor: Colors.red),
                               onPressed: () async {
                                 StorageServices()
-                                    .setStatus(document.id, 'cancel by user');
+                                    .setStatus(document.id, 'cancel');
                               },
                               child: Text('Cancel',
                                   style: GoogleFonts.chewy(

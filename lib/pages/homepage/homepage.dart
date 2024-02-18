@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fuwa_cafe/api/auth_service.dart';
 import 'package:fuwa_cafe/pages/approve/approve.dart';
+import 'package:fuwa_cafe/pages/pending/pending.dart';
 import 'package:fuwa_cafe/pages/profile/profile.dart';
 import 'package:fuwa_cafe/pages/promotion/promotion.dart';
 import 'package:fuwa_cafe/pages/reservations/reservations.dart';
@@ -93,7 +94,27 @@ class _HomePageState extends State<HomePage> {
                               return Container();
                             } else {
                               if (snapshot.hasError || snapshot.data == false) {
-                                return Container();
+                                return Container(
+                                  padding: const EdgeInsets.only(
+                                      left: 12, right: 12),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      IconButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const PendingPage()),
+                                            );
+                                          },
+                                          icon:
+                                              const Icon(Icons.list_outlined)),
+                                    ],
+                                  ),
+                                );
                               } else {
                                 return Container(
                                   padding: const EdgeInsets.only(
